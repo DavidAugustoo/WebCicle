@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
+import 'package:webcicle/HomePage.dart';
+import 'package:webcicle/theme/colors.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -22,10 +25,102 @@ class _LoginPageState extends State<LoginPage> {
           var largura = contraint.maxWidth;
           var altura = contraint.maxHeight;
 
-          if (largura < 600) {
-            return Text('Celular pequeno');
-          } else if (largura < 960) {
-            return Text('Celular Grande');
+          if (largura < 960) {
+            return Expanded(
+                flex: 3,
+                child: Container(
+                    width: largura,
+                    height: altura,
+                    child: Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 5.h, horizontal: 8.h),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Bem vindo!',
+                              style: GoogleFonts.inter(
+                                fontSize: 19.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 1.h,
+                            ),
+                            Text(
+                              'Por favor, entre com suas crendenciais de funcionário',
+                              style: GoogleFonts.inter(
+                                fontSize: 7.sp,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 1.h,
+                            ),
+                            TextFormField(
+                              controller: emailController,
+                              decoration: InputDecoration(
+                                labelText: "Email",
+                              ),
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Digite seu email';
+                                }
+                                return null;
+                              },
+                            ),
+                            SizedBox(
+                              height: 1.h,
+                            ),
+                            TextFormField(
+                              controller: passwordController,
+                              decoration: InputDecoration(
+                                labelText: "Senha",
+                              ),
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Digite seu senha';
+                                }
+                                return null;
+                              },
+                            ),
+                            SizedBox(
+                              height: 2.h,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(20.0),
+                              child: isLoading
+                                  ? CircularProgressIndicator()
+                                  : Container(
+                                      width: largura / 4,
+                                      height: altura / 20,
+                                      child: ElevatedButton(
+                                        style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all<
+                                                    Color>(AppColors.green)),
+                                        onPressed: () {
+                                          if (_formKey.currentState!
+                                              .validate()) {
+                                            setState(() {
+                                              isLoading = true;
+                                            });
+                                            logInToFb();
+                                          }
+                                        },
+                                        child: Text(
+                                          'Entrar',
+                                          style:
+                                              GoogleFonts.inter(fontSize: 6.sp),
+                                        ),
+                                      ),
+                                    ),
+                            )
+                          ],
+                        ),
+                      ),
+                    )));
           } else {
             return Row(
               children: [
@@ -53,6 +148,7 @@ class _LoginPageState extends State<LoginPage> {
                           child: Form(
                             key: _formKey,
                             child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
                                   'Bem vindo!',
@@ -100,6 +196,36 @@ class _LoginPageState extends State<LoginPage> {
                                     return null;
                                   },
                                 ),
+                                Padding(
+                                  padding: EdgeInsets.all(20.0),
+                                  child: isLoading
+                                      ? CircularProgressIndicator()
+                                      : Container(
+                                          width: largura / 4,
+                                          height: altura / 20,
+                                          child: ElevatedButton(
+                                            style: ButtonStyle(
+                                                backgroundColor:
+                                                    MaterialStateProperty.all<
+                                                            Color>(
+                                                        AppColors.green)),
+                                            onPressed: () {
+                                              if (_formKey.currentState!
+                                                  .validate()) {
+                                                setState(() {
+                                                  isLoading = true;
+                                                });
+                                                logInToFb();
+                                              }
+                                            },
+                                            child: Text(
+                                              'Entrar',
+                                              style: GoogleFonts.inter(
+                                                  fontSize: 6.sp),
+                                            ),
+                                          ),
+                                        ),
+                                )
                               ],
                             ),
                           ),
@@ -109,6 +235,41 @@ class _LoginPageState extends State<LoginPage> {
           }
         }),
       );
+    });
+  }
+
+  void logInToFb() {
+    FirebaseAuth.instance
+        .signInWithEmailAndPassword(
+            email: emailController.text, password: passwordController.text)
+        .then((result) {
+      isLoading = false;
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => HomePage(uid: result.user!.uid)),
+      );
+    }).catchError((err) {
+      print(err.message);
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Error"),
+              content: Text(err.message),
+              actions: [
+                ElevatedButton(
+                  child: Text("Ok"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    setState(() {
+                      isLoading = false;
+                    });
+                  },
+                )
+              ],
+            );
+          });
     });
   }
 }
