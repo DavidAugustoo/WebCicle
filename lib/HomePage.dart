@@ -16,47 +16,98 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Sizer(builder: (context, orientation, deviceType) {
-      return DefaultTabController(
-        initialIndex: 0,
-        length: 2,
-        child: Scaffold(
-          appBar: AppBar(
-            elevation: 0,
-            backgroundColor: Colors.white,
-            bottom: TabBar(
-              indicatorColor: AppColors.green,
-              labelColor: AppColors.green,
-              unselectedLabelColor: AppColors.gray,
-              unselectedLabelStyle: TextStyle(fontWeight: FontWeight.normal),
-              labelStyle: TextStyle(fontWeight: FontWeight.bold),
-              tabs: <Widget>[
-                Tab(
-                  child: Text(
-                    'Artigos',
-                    style: GoogleFonts.inter(
-                      fontSize: 8.sp,
+      return LayoutBuilder(builder: (context, constraint) {
+        var largura = constraint.maxWidth;
+        var altura = constraint.maxHeight;
+
+        if (largura < 960) {
+          return DefaultTabController(
+            initialIndex: 0,
+            length: 2,
+            child: Scaffold(
+              appBar: AppBar(
+                elevation: 0,
+                backgroundColor: Colors.white,
+                bottom: TabBar(
+                  indicatorColor: AppColors.green,
+                  labelColor: AppColors.green,
+                  unselectedLabelColor: AppColors.gray,
+                  unselectedLabelStyle:
+                      TextStyle(fontWeight: FontWeight.normal),
+                  labelStyle: TextStyle(fontWeight: FontWeight.bold),
+                  tabs: <Widget>[
+                    Tab(
+                      child: Text(
+                        'Artigos',
+                        style: GoogleFonts.inter(
+                          fontSize: 10.sp,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                Tab(
-                  child: Text(
-                    'Pedidos',
-                    style: GoogleFonts.inter(
-                      fontSize: 8.sp,
+                    Tab(
+                      child: Text(
+                        'Pedidos',
+                        style: GoogleFonts.inter(
+                          fontSize: 10.sp,
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
+              body: TabBarView(
+                children: <Widget>[
+                  ArtigosPage(),
+                  PedidosPage(),
+                ],
+              ),
             ),
-          ),
-          body: TabBarView(
-            children: <Widget>[
-              ArtigosPage(),
-              PedidosPage(),
-            ],
-          ),
-        ),
-      );
+          );
+        } else {
+          return DefaultTabController(
+            initialIndex: 0,
+            length: 2,
+            child: Scaffold(
+              appBar: AppBar(
+                elevation: 0,
+                backgroundColor: Colors.white,
+                bottom: TabBar(
+                  indicatorColor: AppColors.green,
+                  labelColor: AppColors.green,
+                  unselectedLabelColor: AppColors.gray,
+                  unselectedLabelStyle:
+                      TextStyle(fontWeight: FontWeight.normal),
+                  labelStyle: TextStyle(fontWeight: FontWeight.bold),
+                  tabs: <Widget>[
+                    Tab(
+                      child: Text(
+                        'Artigos',
+                        style: GoogleFonts.inter(
+                          fontSize: 8.sp,
+                        ),
+                      ),
+                    ),
+                    Tab(
+                      child: Text(
+                        'Pedidos',
+                        style: GoogleFonts.inter(
+                          fontSize: 8.sp,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              body: TabBarView(
+                children: <Widget>[
+                  ArtigosPage(),
+                  PedidosPage(),
+                ],
+              ),
+            ),
+          );
+        }
+      });
     });
   }
 }

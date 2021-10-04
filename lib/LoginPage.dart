@@ -26,16 +26,15 @@ class _LoginPageState extends State<LoginPage> {
           var altura = contraint.maxHeight;
 
           if (largura < 960) {
-            return Expanded(
-                flex: 3,
-                child: Container(
-                    width: largura,
-                    height: altura,
-                    child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 5.h, horizontal: 8.h),
-                      child: Form(
-                        key: _formKey,
+            return Container(
+                width: largura,
+                height: altura,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 8.h),
+                  child: Center(
+                    child: Form(
+                      key: _formKey,
+                      child: SingleChildScrollView(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -52,8 +51,9 @@ class _LoginPageState extends State<LoginPage> {
                             Text(
                               'Por favor, entre com suas crendenciais de funcionário',
                               style: GoogleFonts.inter(
-                                fontSize: 7.sp,
+                                fontSize: 10.sp,
                               ),
+                              textAlign: TextAlign.center,
                             ),
                             SizedBox(
                               height: 1.h,
@@ -75,6 +75,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             TextFormField(
                               controller: passwordController,
+                              obscureText: true,
                               decoration: InputDecoration(
                                 labelText: "Senha",
                               ),
@@ -93,8 +94,8 @@ class _LoginPageState extends State<LoginPage> {
                               child: isLoading
                                   ? CircularProgressIndicator()
                                   : Container(
-                                      width: largura / 4,
-                                      height: altura / 20,
+                                      width: largura / 3,
+                                      height: 7.h,
                                       child: ElevatedButton(
                                         style: ButtonStyle(
                                             backgroundColor:
@@ -111,8 +112,8 @@ class _LoginPageState extends State<LoginPage> {
                                         },
                                         child: Text(
                                           'Entrar',
-                                          style:
-                                              GoogleFonts.inter(fontSize: 6.sp),
+                                          style: GoogleFonts.inter(
+                                              fontSize: 10.sp),
                                         ),
                                       ),
                                     ),
@@ -120,7 +121,9 @@ class _LoginPageState extends State<LoginPage> {
                           ],
                         ),
                       ),
-                    )));
+                    ),
+                  ),
+                ));
           } else {
             return Row(
               children: [
@@ -161,7 +164,7 @@ class _LoginPageState extends State<LoginPage> {
                                   height: 1.h,
                                 ),
                                 Text(
-                                  'Por favor, entre com suas crendenciais de funcionário',
+                                  'Por favor, entre com suas credenciais de funcionário',
                                   style: GoogleFonts.inter(
                                     fontSize: 5.sp,
                                   ),
@@ -186,6 +189,7 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                                 TextFormField(
                                   controller: passwordController,
+                                  obscureText: true,
                                   decoration: InputDecoration(
                                     labelText: "Senha",
                                   ),
@@ -195,6 +199,9 @@ class _LoginPageState extends State<LoginPage> {
                                     }
                                     return null;
                                   },
+                                ),
+                                SizedBox(
+                                  height: 2.h,
                                 ),
                                 Padding(
                                   padding: EdgeInsets.all(20.0),
